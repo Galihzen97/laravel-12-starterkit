@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 interface ResetPasswordProps {
     token: string;
     email: string;
+    status?: string;
 }
 
 type ResetPasswordForm = {
@@ -21,7 +22,7 @@ type ResetPasswordForm = {
     password_confirmation: string;
 };
 
-export default function ResetPassword({ token, email }: ResetPasswordProps) {
+export default function ResetPassword({ token, email, status }: ResetPasswordProps) {
     const { data, setData, post, processing, errors, reset } = useForm<Required<ResetPasswordForm>>({
         token: token,
         email: email,
