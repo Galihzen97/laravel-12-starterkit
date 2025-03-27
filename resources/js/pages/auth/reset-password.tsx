@@ -1,12 +1,13 @@
 import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
+import { toast } from 'sonner';
 
 interface ResetPasswordProps {
     token: string;
@@ -28,6 +29,16 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
         password_confirmation: '',
     });
 
+    useEffect(() => {
+        if (status) {
+            if (Object.keys(errors).length === 0) {
+                toast.success(status, {
+                    duration: 8000,
+                });
+            }
+        }
+    }, [status, errors]);
+
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('password.store'), {
@@ -42,12 +53,15 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
             <form onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">
+                            Email address<span className="text-red-500">*</span>
+                        </Label>
                         <Input
                             id="email"
                             type="email"
                             name="email"
                             autoComplete="email"
+                            required
                             value={data.email}
                             className="mt-1 block w-full"
                             readOnly
@@ -57,7 +71,9 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password">
+                            Password <span className="text-red-500">*</span>
+                        </Label>
                         <Input
                             id="password"
                             type="password"
@@ -66,6 +82,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             value={data.password}
                             className="mt-1 block w-full"
                             autoFocus
+                            required
                             onChange={(e) => setData('password', e.target.value)}
                             placeholder="Password"
                         />
@@ -73,12 +90,15 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">Confirm password</Label>
+                        <Label htmlFor="password_confirmation">
+                            Confirm password <span className="text-red-500">*</span>
+                        </Label>
                         <Input
                             id="password_confirmation"
                             type="password"
                             name="password_confirmation"
                             autoComplete="new-password"
+                            required
                             value={data.password_confirmation}
                             className="mt-1 block w-full"
                             onChange={(e) => setData('password_confirmation', e.target.value)}

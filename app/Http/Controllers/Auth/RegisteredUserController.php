@@ -18,9 +18,11 @@ class RegisteredUserController extends Controller
     /**
      * Show the registration page.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('auth/register');
+        return Inertia::render('auth/register-social', [
+            'providersConfig' => $request->attributes->get('providersConfig'),
+        ]);
     }
 
     /**
@@ -39,6 +41,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'last_login' => tgl_now(),
             'password' => Hash::make($request->password),
         ]);
 

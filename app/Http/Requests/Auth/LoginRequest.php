@@ -27,11 +27,20 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'email', 'exists:users,email'],
             'password' => ['required', 'string'],
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Email is required.',
+            'email.email' => 'Email must be a valid email address.',
+            'email.exists' => 'Email is not registered in our system',
+            'password.required' => 'Password is required.',
+        ];
+    }
     /**
      * Attempt to authenticate the request's credentials.
      *
@@ -44,8 +53,9 @@ class LoginRequest extends FormRequest
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+             throw ValidationException::withMessages([
+                'email' => __('Email or password is incorrect.'),
+                'password' => __('Email or password is incorrect.'),
             ]);
         }
 

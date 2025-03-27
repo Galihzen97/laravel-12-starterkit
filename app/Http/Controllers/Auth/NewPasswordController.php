@@ -38,6 +38,12 @@ class NewPasswordController extends Controller
             'token' => 'required',
             'email' => 'required|email',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ],[
+            'email.required' => 'Email is required',
+            'email.email' => 'Email must be a valid email address',
+            'password.required' => 'Password is required',
+            'password.confirmed' => 'Password does not match',
+
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
@@ -58,12 +64,12 @@ class NewPasswordController extends Controller
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
-        if ($status == Password::PasswordReset) {
-            return to_route('login')->with('status', __($status));
+        if ($status === Password::PASSWORD_RESET) {
+            return to_route('login')->with('status', 'Your password has been successfully reset. You can now login.');
         }
 
         throw ValidationException::withMessages([
-            'email' => [__($status)],
+            'email' => ['Failed to reset password. Please check your credentials and try again.'],
         ]);
     }
 }
