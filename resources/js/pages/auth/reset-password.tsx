@@ -31,14 +31,10 @@ export default function ResetPassword({ token, email, status }: ResetPasswordPro
     });
 
     useEffect(() => {
-        if (status) {
-            if (Object.keys(errors).length === 0) {
-                toast.success(status, {
-                    duration: 8000,
-                });
-            }
+        if (status && Object.keys(errors).length === 0) {
+            toast.success(status, { duration: 8000 });
         }
-    }, [status, errors]);
+    }, [errors]);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();

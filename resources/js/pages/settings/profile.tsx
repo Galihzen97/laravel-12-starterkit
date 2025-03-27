@@ -42,15 +42,13 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
     };
 
     useEffect(() => {
-        if (status && Object.keys(errors).length === 0) {
+        if (Object.keys(errors).length === 0 && status) {
             toast.success(status, { duration: 8000 });
         } else if (Object.keys(errors).length > 0) {
-            const errorMessage = (errors as any).error;
-            if (errorMessage) {
-                toast.error(String(errorMessage), { duration: 5000 });
-            }
+            const errorMessages = Object.values(errors).join(', '); // Gabung semua pesan error
+            toast.error(errorMessages || 'Terjadi kesalahan', { duration: 5000 });
         }
-    }, [status, errors]);
+    }, [errors]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
